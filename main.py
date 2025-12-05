@@ -96,14 +96,13 @@ class RoseKing:
             self.player = Color.RED
 
     def print(self):
-        def print_cards(cards: list[Card], knights: int):
+        def print_cards(cards: list[Card], knights: int, color: str):
             for i in range(len(cards)):
                 card = cards[i]
-                print(f"{i+1}: {card.direction} {'I' * card.n}")
-            print(f"Knights: {knights}")
+                print(colored(f"{i+1}: {card.direction} {'I' * card.n}", color))
+            print(colored(f"Knights: {knights}", color))
 
-        print("Red cards:")
-        print_cards(self.red_cards, self.red_knights)
+        print_cards(self.red_cards, self.red_knights, "red")
         # print board
         for y in range(self.N):
             for x in range(self.N):
@@ -123,8 +122,7 @@ class RoseKing:
             print()
 
         # print blue cards
-        print("Blue cards:")
-        print_cards(self.blue_cards, self.blue_knights)
+        print_cards(self.blue_cards, self.blue_knights, "blue")
 
         print(
             f"Draw pile: {len(self.draw_cards)}, discard pile: {len(self.discard_cards)}, stones: {self.stones}"
@@ -209,7 +207,9 @@ game = RoseKing()
 
 while not game.done:
     game.print()
-    print(f"It is {'red' if game.player == Color.RED else 'blue'}'s turn!")
+    print(
+        f"It is {colored('red','red') if game.player == Color.RED else colored('blue','blue')}'s turn!"
+    )
     move = input("Move (number or 'draw'):")
     try:
         assert (

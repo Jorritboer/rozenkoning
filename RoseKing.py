@@ -137,13 +137,13 @@ class RoseKing:
                 self.red_cards
             ), f"You can play cards {[i + 1 for i in range(len(self.red_cards))]}, not {card_nr}"
 
-            card = self.red_cards.pop(card_nr - 1)
+            card = self.red_cards[card_nr - 1]
         else:
             assert card_nr >= 1 and card_nr <= len(
                 self.blue_cards
             ), f"You can play cards {[i + 1 for i in range(len(self.blue_cards))]}, not {card_nr}"
 
-            card = self.blue_cards.pop(card_nr - 1)
+            card = self.blue_cards[card_nr - 1]
 
         new_x = self.cur_pos_x
         new_y = self.cur_pos_y
@@ -172,11 +172,9 @@ class RoseKing:
         assert (
             new_x >= 0 and new_x < self.N and new_y >= 0 and new_y < self.N
         ), "You cannot play this card because it would place the crown outside of the board"
-        self.cur_pos_x = new_x
-        self.cur_pos_y = new_y
-        if self.board[self.cur_pos_x][self.cur_pos_y] != None:
+        if self.board[new_x][new_y] != None:
             assert (
-                self.board[self.cur_pos_x][self.cur_pos_y] != self.player
+                self.board[new_x][new_y] != self.player
             ), "The player's stone itself is there"
             # if not its own color, it is the others, so the player needs a knight
             if self.player == Color.RED:
@@ -190,7 +188,16 @@ class RoseKing:
                 ), "Blue has no knights so cannot play this move"
                 self.blue_knights -= 1
 
+        self.cur_pos_x = new_x
+        self.cur_pos_y = new_y
+
         self.board[self.cur_pos_x][self.cur_pos_y] = self.player
+
+        # if all checks are passed, remove the card from hand
+        if self.player == Color.RED:
+            self.red_cards.pop(card_nr - 1)
+        else:
+            self.blue_cards.pop(card_nr - 1)
 
         self.discard_cards.append(card)
         self.stones -= 1

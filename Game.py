@@ -92,9 +92,15 @@ class MyGame(arcade.Window):
                     )
 
         for card in self.red_card_sprites:
-            arcade.draw_sprite(card)
+            if self.game.player == Color.RED:
+                arcade.draw_sprite(card, alpha=255)
+            else:
+                arcade.draw_sprite(card, alpha=50)
         for card in self.blue_card_sprites:
-            arcade.draw_sprite(card)
+            if self.game.player == Color.BLUE:
+                arcade.draw_sprite(card, alpha=255)
+            else:
+                arcade.draw_sprite(card, alpha=50)
 
         # drawing card text
         for i, card in enumerate(self.game.red_cards):
@@ -129,16 +135,18 @@ class MyGame(arcade.Window):
 
     def on_mouse_press(self, x, y, button, modifiers):
         try:
-            for i in range(len(self.red_card_sprites)):
-                card = self.red_card_sprites[i]
-                if card.collides_with_point((x, y)):
-                    self.game.play_card(i + 1)
-                    break
-            for i in range(len(self.blue_card_sprites)):
-                card = self.blue_card_sprites[i]
-                if card.collides_with_point((x, y)):
-                    self.game.play_card(i + 1)
-                    break
+            if self.game.player == Color.RED:
+                for i in range(len(self.red_card_sprites)):
+                    card = self.red_card_sprites[i]
+                    if card.collides_with_point((x, y)):
+                        self.game.play_card(i + 1)
+                        break
+            else:
+                for i in range(len(self.blue_card_sprites)):
+                    card = self.blue_card_sprites[i]
+                    if card.collides_with_point((x, y)):
+                        self.game.play_card(i + 1)
+                        break
 
             if self.draw_pile.collides_with_point((x, y)):
                 self.game.draw_card()

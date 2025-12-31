@@ -128,6 +128,11 @@ class MyGame(arcade.Window):
             f"Knights: {self.game.red_knights}", 525, 115, arcade.color.RED
         ).draw()
 
+        arcade.Text(
+            f"Score: {self.game.blue_score}", 525, 575, arcade.color.BLUE
+        ).draw()
+        arcade.Text(f"Score: {self.game.red_score}", 525, 165, arcade.color.RED).draw()
+
         arcade.draw_sprite(self.draw_pile)
         arcade.Text(f"Draw:\n {len(self.game.draw_cards)} cards left", 20, 450).draw()
 

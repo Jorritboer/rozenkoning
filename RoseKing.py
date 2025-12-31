@@ -59,6 +59,8 @@ class RoseKing:
         self.stones = 52
         self.red_knights = 4
         self.blue_knights = 4
+        self.red_score = 0
+        self.blue_score = 0
         self.draw_cards: list[Card] = []
         for dir in Direction:
             for n in range(1, 4):
@@ -208,3 +210,47 @@ class RoseKing:
             self.player = Color.BLUE
         else:
             self.player = Color.RED
+
+        self.blue_score, self.red_score = self.compute_score()
+
+    def compute_score(self):
+        print("computing score")
+        visited = [[False] * self.N for _ in range(self.N)]
+
+        score_red = 0
+        score_blue = 0
+
+        def bfs(i, j):
+            color = self.board[i][j]
+            queue = [(i, j)]
+            visited[i][j] = True
+            size = 0
+
+            while queue:
+                x, y = queue.pop()
+                size += 1
+
+                directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+                for dx, dy in directions:
+                    nx, ny = x + dx, y + dy
+                    if (
+                        0 <= nx < self.N
+                        and 0 <= ny < self.N
+                        and not visited[nx][ny]
+                        and self.board[nx][ny] == color
+                    ):
+                        visited[nx][ny] = True
+                        queue.append((nx, ny))
+
+            return size
+
+        for i in range(self.N):
+            for j in range(self.N):
+                if self.board[i][j] is not None and not visited[i][j]:
+                    group_size = bfs(i, j)
+                    if self.board[i][j] == Color.RED:
+                        score_red += group_size * group_size
+                    else:
+                        score_blue += group_size * group_size
+
+        return score_blue, score_red
